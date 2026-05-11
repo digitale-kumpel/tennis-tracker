@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id           Int       @id @default(1)
+  name         String
+  birthYear    Int
+  height       Int
+  weight       Float
+  targetWeight Float?
+  club         String
+  team         String
+  dtbId        String?
+  dgrNumber    String?
+  currentLk    Float
+  notes        String?
+  lkEntries    LkEntry[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model LkEntry {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  lk        Float
+  profileId Int
+  profile   Profile  @relation(fields: [profileId], references: [id])
+}
+
+enum MatchType {
+  SINGLES
+  DOUBLES
+  TEAM
+}
+
+enum Surface {
+  CLAY
+  HARD
+  INDOOR
+  GRASS
+}
+
+model Match {
+  id             Int       @id @default(autoincrement())
+  date           DateTime
+  opponent       String?
+  type           MatchType
+  result         String
+  won            Boolean
+  surface        Surface
+  tournamentName String?
+  partner        String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+enum TrainingType {
+  TRAINER
+  TEAM
+  FREE
+  MATCH_PRACTICE
+}
+
+model TrainingSession {
+  id              Int          @id @default(autoincrement())
+  date            DateTime
+  type            TrainingType
+  durationMinutes Int
+  focus           String[]
+  notes           String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+enum TimeOfDay {
+  MORNING
+  EVENING
+  ANY
+}
+
+model Routine {
+  id              Int          @id @default(autoincrement())
+  name            String
+  description     String?
+  durationMinutes Int
+  timeOfDay       TimeOfDay
+  exercises       Exercise[]
+  logs            RoutineLog[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Exercise {
+  id            Int      @id @default(autoincrement())
+  routineId     Int
+  routine       Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  sortOrder     Int
+  name          String
+  targetArea    String
+  duration      String
+  reps          String?
+  instructions  String
+  referenceUrls String[]
+}
+
+model RoutineLog {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  routineId Int
+  routine   Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  completed Boolean
+  notes     String?
+  createdAt DateTime @default(now())
+
+  @@unique([date, routineId])
+}
+
+enum GoalCategory {
+  LK
+  FITNESS
+  TOURNAMENT
+  WEIGHT
+  OTHER
+}
+
+model Goal {
+  id            Int          @id @default(autoincrement())
+  title         String
+  description   String?
+  category      GoalCategory
+  targetDate    DateTime?
+  completed     Boolean      @default(false)
+  completedDate DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model BodyLog {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  weight    Float
+  notes     String?
+  createdAt DateTime @default(now())
+
+  @@unique([date])
+}
