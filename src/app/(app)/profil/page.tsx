@@ -175,10 +175,8 @@ export default function ProfilPage() {
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium">Gewicht</h3>
               <Dialog open={weightOpen} onOpenChange={setWeightOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" variant="outline">
-                    <Plus className="h-3 w-3 mr-1" /> Eintrag
-                  </Button>
+                <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                  <Plus className="h-3 w-3 mr-1" /> Eintrag
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>

@@ -112,10 +112,8 @@ export default function TrainingPage() {
     <>
       <PageHeader title="Training">
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-1" /> Neu
-            </Button>
+          <DialogTrigger render={<Button size="sm" />}>
+            <Plus className="h-4 w-4 mr-1" /> Neu
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -144,7 +142,7 @@ export default function TrainingPage() {
               </div>
               <div className="space-y-1">
                 <Label>Typ</Label>
-                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v ?? form.type })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="TRAINER">Trainer</SelectItem>

@@ -113,10 +113,8 @@ export default function MatchesPage() {
     <>
       <PageHeader title="Matches">
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-1" /> Neu
-            </Button>
+          <DialogTrigger render={<Button size="sm" />}>
+            <Plus className="h-4 w-4 mr-1" /> Neu
           </DialogTrigger>
           <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
@@ -134,7 +132,7 @@ export default function MatchesPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
                   <Label>Typ</Label>
-                  <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                  <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v ?? form.type })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="SINGLES">Einzel</SelectItem>
@@ -145,7 +143,7 @@ export default function MatchesPage() {
                 </div>
                 <div className="space-y-1">
                   <Label>Belag</Label>
-                  <Select value={form.surface} onValueChange={(v) => setForm({ ...form, surface: v })}>
+                  <Select value={form.surface} onValueChange={(v) => setForm({ ...form, surface: v ?? form.surface })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CLAY">Sand</SelectItem>
