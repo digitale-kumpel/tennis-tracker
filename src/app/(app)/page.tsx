@@ -82,7 +82,7 @@ export default function DashboardPage() {
                   </div>
                   {r.streak > 0 && (
                     <span className="text-xs text-muted-foreground">
-                      {r.streak} Tage Streak
+                      {r.streak} {r.streak === 1 ? "Tag" : "Tage"} Streak
                     </span>
                   )}
                 </div>

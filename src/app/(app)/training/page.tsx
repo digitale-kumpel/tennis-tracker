@@ -54,6 +54,16 @@ const focusOptions = [
   "Doppel",
 ];
 
+function nextWeekday(targetDay: number): string {
+  const today = new Date();
+  const todayDay = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  let daysUntil = targetDay - todayDay;
+  if (daysUntil <= 0) daysUntil += 7;
+  const result = new Date(today);
+  result.setDate(today.getDate() + daysUntil);
+  return result.toISOString().split("T")[0];
+}
+
 export default function TrainingPage() {
   const searchParams = useSearchParams();
   const [sessions, setSessions] = useState<TrainingSession[]>([]);
@@ -65,6 +75,17 @@ export default function TrainingPage() {
     focus: [] as string[],
     notes: "",
   });
+
+  function applyPreset(type: string, durationMinutes: number, weekday: number) {
+    setForm({
+      date: nextWeekday(weekday),
+      type,
+      durationMinutes,
+      focus: [],
+      notes: "",
+    });
+    setOpen(true);
+  }
 
   useEffect(() => {
     loadData();
@@ -181,6 +202,26 @@ export default function TrainingPage() {
       </PageHeader>
 
       <div className="p-4 space-y-4">
+        {/* Quick Presets */}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={() => applyPreset("TRAINER", 60, 2)}
+          >
+            Di Trainer
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={() => applyPreset("TEAM", 120, 4)}
+          >
+            Do Mannschaft
+          </Button>
+        </div>
+
         {weekMinutes > 0 && (
           <Card>
             <CardContent className="py-3 text-center">

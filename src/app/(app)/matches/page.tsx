@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { api } from "@/lib/api";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 interface Match {
@@ -62,6 +62,7 @@ export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [open, setOpen] = useState(searchParams.get("add") === "true");
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const [form, setForm] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -106,6 +107,13 @@ export default function MatchesPage() {
       partner: "",
       notes: "",
     });
+    loadData();
+  }
+
+  async function confirmDelete() {
+    if (deleteId === null) return;
+    await api.delete(`/api/matches/${deleteId}`);
+    setDeleteId(null);
     loadData();
   }
 
@@ -233,6 +241,24 @@ export default function MatchesPage() {
           </div>
         )}
 
+        {/* Delete confirm dialog */}
+        <Dialog open={deleteId !== null} onOpenChange={(o) => { if (!o) setDeleteId(null); }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Match loeschen?</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground">Dieser Eintrag wird dauerhaft geloescht.</p>
+            <div className="flex gap-2 mt-2">
+              <Button variant="outline" className="flex-1" onClick={() => setDeleteId(null)}>
+                Abbrechen
+              </Button>
+              <Button variant="destructive" className="flex-1" onClick={confirmDelete}>
+                Loeschen
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {matches.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">Noch keine Matches eingetragen</p>
         ) : (
@@ -252,8 +278,17 @@ export default function MatchesPage() {
                         {m.opponent || "Unbekannt"} · {typeLabels[m.type]} · {surfaceLabels[m.surface]}
                       </div>
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(m.date).toLocaleDateString("de-DE")}
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(m.date).toLocaleDateString("de-DE")}
+                      </div>
+                      <button
+                        onClick={() => setDeleteId(m.id)}
+                        className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                        aria-label="Match loeschen"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                   {m.notes && (

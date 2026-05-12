@@ -75,7 +75,7 @@ export default function RoutinenPage() {
                     <div className="flex items-center gap-2">
                       {r.streak > 0 && (
                         <span className="text-xs text-muted-foreground">
-                          {r.streak}d Streak
+                          {r.streak} {r.streak === 1 ? "Tag" : "Tage"} Streak
                         </span>
                       )}
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />

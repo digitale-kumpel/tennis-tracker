@@ -24,6 +24,7 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
+  LabelList,
 } from "recharts";
 import { Plus, ExternalLink } from "lucide-react";
 
@@ -157,12 +158,14 @@ export default function ProfilPage() {
           <Card>
             <CardContent className="py-3">
               <h3 className="font-medium mb-2">LK-Verlauf</h3>
-              <ResponsiveContainer width="100%" height={150}>
+              <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={lkChartData}>
                   <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                   <YAxis reversed domain={["dataMin - 1", "dataMax + 1"]} tick={{ fontSize: 11 }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="lk" stroke="hsl(var(--primary))" strokeWidth={2} dot />
+                  <Line type="monotone" dataKey="lk" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 4 }}>
+                    <LabelList dataKey="lk" position="top" style={{ fontSize: 11 }} />
+                  </Line>
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
