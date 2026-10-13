@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 FROM base AS deps
 WORKDIR /app
@@ -25,6 +25,9 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/pg ./node_modules/pg
 COPY --from=builder /app/node_modules/pg-cloudflare ./node_modules/pg-cloudflare
 COPY --from=builder /app/prisma ./prisma
+# npm wird zur Laufzeit nicht gebraucht (CMD ist node server.js); entfernt dessen
+# mitgelieferte Abhängigkeiten aus dem Image und damit aus dem Scan (KUC-231)
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
